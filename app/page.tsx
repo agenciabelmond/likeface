@@ -1,8 +1,39 @@
 "use client"
 
 import Link from "next/link"
+import { useEffect } from "react"
 
 export default function Home() {
+  // Registra a função de conversão no window
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.gtag_report_conversion = function (url) {
+        var callback = function () {
+          if (typeof url !== "undefined") {
+            window.open(url, "_blank")
+          }
+        }
+
+        if (typeof window.gtag !== "undefined") {
+          window.gtag("event", "conversion", {
+            send_to: "AW-17677069576/SzhsCIiDhrMbEIjaiu1B",
+            value: 1.0,
+            currency: "BRL",
+            event_callback: callback,
+          })
+        } else {
+          // Se o gtag não carregou ainda, abre direto
+          window.open(url, "_blank")
+        }
+
+        return false
+      }
+    }
+  }, [])
+
+  const whatsLink =
+    "https://wa.me/+55553197447667?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
+
   return (
     <div className="min-h-screen flex flex-col bg-black text-white font-sans">
       <header className="bg-white py-2.5 px-4 flex items-center justify-center gap-2 border-b border-yellow-500/20">
@@ -19,10 +50,9 @@ export default function Home() {
           Clique no botão abaixo para prosseguir seu atendimento
         </h2>
 
-        <Link
-          href="https://wa.me/+55553197447667?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* Botão com conversão */}
+        <button
+          onClick={() => window.gtag_report_conversion(whatsLink)}
           className="relative inline-flex items-center gap-3 bg-[#42ac69] text-white px-10 py-4 rounded-full text-lg font-medium transition-all duration-300 hover:bg-[#20b955] hover:scale-105 animate-pulse-custom"
         >
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -32,7 +62,7 @@ export default function Home() {
           <span className="absolute -top-1 right-3 bg-red-600 text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center shadow-[0_0_0_2px_#25D366]">
             3
           </span>
-        </Link>
+        </button>
       </main>
 
       <footer className="py-8 px-8 text-center bg-white text-gray-800 flex items-center justify-center gap-2 text-sm">
